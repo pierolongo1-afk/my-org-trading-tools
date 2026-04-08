@@ -1,34 +1,421 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTC Scalper Checklist</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { text-align: center; }
-        ul { list-style-type: none; padding: 0; }
-        li { margin: 10px 0; }
-        .completed { text-decoration: line-through; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scalper Checklist — BTC</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+:root {
+–bg: #0a0a0f;
+–surface: #111118;
+–border: #1e1e2e;
+–accent: #f0b429;
+–accent2: #ff6b35;
+–green: #00e676;
+–red: #ff1744;
+–text: #e8e8f0;
+–muted: #555570;
+}
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘Space Mono’, monospace;
+min-height: 100vh;
+padding: 24px 16px;
+position: relative;
+overflow-x: hidden;
+}
+
+body::before {
+content: ‘’;
+position: fixed;
+top: -200px; left: -200px;
+width: 600px; height: 600px;
+background: radial-gradient(circle, rgba(240,180,41,0.06) 0%, transparent 70%);
+pointer-events: none;
+animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+0%, 100% { transform: scale(1); opacity: 1; }
+50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+.header {
+text-align: center;
+margin-bottom: 32px;
+animation: fadeDown 0.6s ease both;
+}
+
+@keyframes fadeDown {
+from { opacity: 0; transform: translateY(-16px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.label {
+font-family: ‘Space Mono’, monospace;
+font-size: 10px;
+letter-spacing: 4px;
+color: var(–accent);
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+
+h1 {
+font-family: ‘Syne’, sans-serif;
+font-size: 28px;
+font-weight: 800;
+letter-spacing: -0.5px;
+line-height: 1.1;
+}
+
+h1 span { color: var(–accent); }
+
+.subtitle {
+font-size: 10px;
+color: var(–muted);
+margin-top: 8px;
+letter-spacing: 2px;
+}
+
+.phase {
+margin-bottom: 20px;
+animation: fadeUp 0.5s ease both;
+}
+
+.phase:nth-child(1) { animation-delay: 0.1s; }
+.phase:nth-child(2) { animation-delay: 0.2s; }
+.phase:nth-child(3) { animation-delay: 0.3s; }
+.phase:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(12px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.phase-header {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 10px;
+padding-bottom: 8px;
+border-bottom: 1px solid var(–border);
+}
+
+.phase-num {
+font-family: ‘Syne’, sans-serif;
+font-size: 11px;
+font-weight: 800;
+background: var(–accent);
+color: #000;
+width: 22px; height: 22px;
+display: flex; align-items: center; justify-content: center;
+border-radius: 4px;
+flex-shrink: 0;
+}
+
+.phase-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 13px;
+font-weight: 700;
+color: var(–text);
+letter-spacing: 0.5px;
+}
+
+.phase-title .icon { margin-right: 4px; }
+
+.items { display: flex; flex-direction: column; gap: 6px; }
+
+.item {
+display: flex;
+align-items: flex-start;
+gap: 10px;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 10px 12px;
+cursor: pointer;
+transition: all 0.2s ease;
+user-select: none;
+-webkit-tap-highlight-color: transparent;
+}
+
+.item:active { transform: scale(0.98); }
+.item.checked { border-color: rgba(0,230,118,0.25); background: rgba(0,230,118,0.04); }
+.item.checked .item-text { color: var(–muted); text-decoration: line-through; }
+
+.checkbox {
+width: 18px; height: 18px;
+border: 1.5px solid var(–muted);
+border-radius: 4px;
+flex-shrink: 0;
+display: flex; align-items: center; justify-content: center;
+transition: all 0.2s ease;
+margin-top: 1px;
+}
+
+.item.checked .checkbox {
+background: var(–green);
+border-color: var(–green);
+}
+
+.checkmark {
+opacity: 0;
+font-size: 11px;
+color: #000;
+font-weight: 700;
+transition: opacity 0.15s ease;
+}
+.item.checked .checkmark { opacity: 1; }
+
+.item-content { flex: 1; }
+
+.item-text {
+font-size: 11px;
+line-height: 1.5;
+color: var(–text);
+transition: color 0.2s, text-decoration 0.2s;
+}
+
+.item-note {
+font-size: 9px;
+color: var(–muted);
+margin-top: 3px;
+letter-spacing: 0.5px;
+}
+
+.tag {
+display: inline-block;
+font-size: 8px;
+font-weight: 700;
+letter-spacing: 1px;
+padding: 2px 5px;
+border-radius: 3px;
+margin-right: 4px;
+vertical-align: middle;
+}
+
+.tag-heat { background: rgba(240,180,41,0.15); color: var(–accent); border: 1px solid rgba(240,180,41,0.3); }
+.tag-ta { background: rgba(100,100,255,0.12); color: #8888ff; border: 1px solid rgba(100,100,255,0.25); }
+.tag-vol { background: rgba(255,107,53,0.12); color: var(–accent2); border: 1px solid rgba(255,107,53,0.25); }
+.tag-rsi { background: rgba(0,230,118,0.1); color: var(–green); border: 1px solid rgba(0,230,118,0.2); }
+
+.progress-bar-wrap {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 14px 16px;
+margin-bottom: 20px;
+animation: fadeDown 0.6s ease 0.05s both;
+}
+
+.progress-top {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 8px;
+}
+
+.progress-label {
+font-size: 9px;
+letter-spacing: 2px;
+color: var(–muted);
+text-transform: uppercase;
+}
+
+.progress-count {
+font-family: ‘Syne’, sans-serif;
+font-size: 14px;
+font-weight: 800;
+color: var(–accent);
+}
+
+.progress-track {
+height: 4px;
+background: var(–border);
+border-radius: 2px;
+overflow: hidden;
+}
+
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, var(–accent), var(–accent2));
+border-radius: 2px;
+transition: width 0.4s ease;
+width: 0%;
+}
+
+.verdict {
+text-align: center;
+padding: 14px;
+border-radius: 10px;
+font-family: ‘Syne’, sans-serif;
+font-size: 13px;
+font-weight: 700;
+margin-bottom: 20px;
+transition: all 0.3s ease;
+border: 1px solid var(–border);
+background: var(–surface);
+color: var(–muted);
+letter-spacing: 0.5px;
+}
+
+.verdict.go { background: rgba(0,230,118,0.08); border-color: rgba(0,230,118,0.3); color: var(–green); }
+.verdict.caution { background: rgba(240,180,41,0.08); border-color: rgba(240,180,41,0.3); color: var(–accent); }
+.verdict.stop { background: rgba(255,23,68,0.08); border-color: rgba(255,23,68,0.3); color: var(–red); }
+
+.reset-btn {
+display: block;
+width: 100%;
+padding: 12px;
+background: transparent;
+border: 1px solid var(–border);
+border-radius: 8px;
+color: var(–muted);
+font-family: ‘Space Mono’, monospace;
+font-size: 10px;
+letter-spacing: 2px;
+cursor: pointer;
+text-transform: uppercase;
+transition: all 0.2s ease;
+}
+
+.reset-btn:hover { border-color: var(–accent); color: var(–accent); }
+</style>
+
 </head>
 <body>
-    <h1>BTC Scalper Checklist</h1>
-    <ul id="checklist">
-        <li><input type="checkbox" /> Check market conditions</li>
-        <li><input type="checkbox" /> Set entry price</li>
-        <li><input type="checkbox" /> Set take profit targets</li>
-        <li><input type="checkbox" /> Set stop loss</li>
-        <li><input type="checkbox" /> Monitor news and updates</li>
-        <li><input type="checkbox" /> Review trading plan</li>
-    </ul>
-    <script>
-        const checklist = document.getElementById('checklist');
-        checklist.addEventListener('change', function(e) {
-            if (e.target.tagName === 'INPUT') {
-                e.target.parentElement.classList.toggle('completed', e.target.checked);
-            }
-        });
-    </script>
+
+<div class="header">
+  <div class="label">⚡ Pre-Trade Protocol</div>
+  <h1>BTC Scalper<br><span>Checklist</span></h1>
+  <div class="subtitle">HEATMAP · TA · VOLUME · MOMENTUM</div>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-top">
+    <span class="progress-label">Completamento</span>
+    <span class="progress-count" id="count">0 / 12</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="bar"></div>
+  </div>
+</div>
+
+<div class="verdict" id="verdict">Completa la checklist prima di entrare</div>
+
+<div id="phases"></div>
+
+<button class="reset-btn" onclick="resetAll()">↺ Reset checklist</button>
+
+<script>
+const data = [
+  {
+    num: "01",
+    title: "🌡️ Liquidation Heatmap",
+    items: [
+      { text: "Zona luminosa identificata", note: "Sopra o sotto il prezzo attuale?", tag: "heat" },
+      { text: "Distanza zona ≤ 1.5% dal prezzo", note: "Oltre non è rilevante per lo scalping", tag: "heat" },
+      { text: "Heatmap aggiornata (< 15 min)", note: "Le zone si spostano rapidamente", tag: "heat" },
+    ]
+  },
+  {
+    num: "02",
+    title: "📐 Analisi Tecnica",
+    items: [
+      { text: "Bias direzionale confermato dalla TA", note: "S/R, trend, pattern coerenti con heatmap", tag: "ta" },
+      { text: "Nessun livello chiave in mezzo al trade", note: "S/R tra entry e TP = trade bloccato", tag: "ta" },
+      { text: "TP posizionato prima della zona heatmap", note: "Esci prima, non sulla zona esatta", tag: "ta" },
+    ]
+  },
+  {
+    num: "03",
+    title: "📊 Volumi & Order Flow",
+    items: [
+      { text: "Volume in aumento nella direzione del trade", note: "Volume piatto = segnale debole", tag: "vol" },
+      { text: "Order flow prevalentemente allineato", note: "Delta positivo per long, negativo per short", tag: "vol" },
+      { text: "Nessuna grossa wall contraria visibile", note: "Muro di vendite/acquisti che blocca il move", tag: "vol" },
+    ]
+  },
+  {
+    num: "04",
+    title: "⚡ Momentum & Contesto",
+    items: [
+      { text: "RSI non in zona estrema opposta al trade", note: "Long con RSI > 75 o Short con RSI < 25 = rischio", tag: "rsi" },
+      { text: "Nessun evento macro imminente (< 30 min)", note: "CPI, FOMC, news → skip il trade", tag: "rsi" },
+      { text: "R/R favorevole (minimo 1.5:1)", note: "Se il TP è troppo vicino, non vale", tag: "rsi" },
+    ]
+  }
+];
+
+const tagMap = { heat: "tag-heat", ta: "tag-ta", vol: "tag-vol", rsi: "tag-rsi" };
+let checked = new Set();
+const total = data.reduce((a, p) => a + p.items.length, 0);
+
+function render() {
+  const container = document.getElementById('phases');
+  container.innerHTML = '';
+  data.forEach((phase, pi) => {
+    const div = document.createElement('div');
+    div.className = 'phase';
+    div.innerHTML = `
+      <div class="phase-header">
+        <div class="phase-num">${phase.num}</div>
+        <div class="phase-title">${phase.title}</div>
+      </div>
+      <div class="items">
+        ${phase.items.map((item, ii) => {
+          const id = `${pi}-${ii}`;
+          const isChecked = checked.has(id);
+          return `
+            <div class="item ${isChecked ? 'checked' : ''}" onclick="toggle('${id}', this)">
+              <div class="checkbox"><span class="checkmark">✓</span></div>
+              <div class="item-content">
+                <div class="item-text"><span class="tag ${tagMap[item.tag]}">${item.tag.toUpperCase()}</span>${item.text}</div>
+                <div class="item-note">${item.note}</div>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>`;
+    container.appendChild(div);
+  });
+  updateProgress();
+}
+
+function toggle(id, el) {
+  if (checked.has(id)) { checked.delete(id); el.classList.remove('checked'); }
+  else { checked.add(id); el.classList.add('checked'); }
+  el.querySelector('.item-text') && (el.querySelector('.item-text').style.color = checked.has(id) ? 'var(--muted)' : '');
+  updateProgress();
+}
+
+function updateProgress() {
+  const n = checked.size;
+  document.getElementById('count').textContent = `${n} / ${total}`;
+  document.getElementById('bar').style.width = `${(n / total) * 100}%`;
+  const v = document.getElementById('verdict');
+  if (n === total) {
+    v.className = 'verdict go'; v.textContent = '✅ SETUP VALIDO — Puoi entrare';
+  } else if (n >= 9) {
+    v.className = 'verdict caution'; v.textContent = '⚠️ QUASI PRONTO — Verifica i punti mancanti';
+  } else if (n >= 6) {
+    v.className = 'verdict caution'; v.textContent = '⚠️ SETUP PARZIALE — Troppi dubbi, aspetta';
+  } else {
+    v.className = 'verdict stop'; v.textContent = '🚫 NON ENTRARE — Condizioni non verificate';
+  }
+}
+
+function resetAll() {
+  checked.clear();
+  render();
+}
+
+render();
+</script>
+
 </body>
 </html>
