@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Scalper Checklist</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { text-align: center; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin: 10px 0; }
+        .completed { text-decoration: line-through; }
+    </style>
+</head>
+<body>
+    <h1>BTC Scalper Checklist</h1>
+    <ul id="checklist">
+        <li><input type="checkbox" /> Check market conditions</li>
+        <li><input type="checkbox" /> Set entry price</li>
+        <li><input type="checkbox" /> Set take profit targets</li>
+        <li><input type="checkbox" /> Set stop loss</li>
+        <li><input type="checkbox" /> Monitor news and updates</li>
+        <li><input type="checkbox" /> Review trading plan</li>
+    </ul>
+    <script>
+        const checklist = document.getElementById('checklist');
+        checklist.addEventListener('change', function(e) {
+            if (e.target.tagName === 'INPUT') {
+                e.target.parentElement.classList.toggle('completed', e.target.checked);
+            }
+        });
+    </script>
+</body>
+</html>
